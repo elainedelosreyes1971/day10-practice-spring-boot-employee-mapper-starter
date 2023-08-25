@@ -22,4 +22,13 @@ public class EmployeeMapper {
         BeanUtils.copyProperties(employee, employeeResponse);
         return employeeResponse;
     }
+
+    public static void updateEmployee(EmployeeRequest employeeRequest, Employee toBeUpdatedEmployee) {
+        if (employeeRequest.getSalary() != null) {
+            toBeUpdatedEmployee.setSalary(employeeRequest.getSalary());
+        }
+        if (employeeRequest.getAge() != null) {
+            toBeUpdatedEmployee.setAge(employeeRequest.getAge());
+        }
+    }
 }
