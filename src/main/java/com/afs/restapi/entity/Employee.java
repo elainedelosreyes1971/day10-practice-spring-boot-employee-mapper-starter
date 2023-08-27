@@ -76,10 +76,6 @@ public class Employee {
         return salary;
     }
 
-    public Long getCompanyId() {
-        return companyId;
-    }
-
     public void setCompanyId(Long companyId) {
         this.companyId = companyId;
     }
