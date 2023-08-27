@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SuppressWarnings("all")
 @RequestMapping("companies")
 @RestController
 public class CompanyController {
