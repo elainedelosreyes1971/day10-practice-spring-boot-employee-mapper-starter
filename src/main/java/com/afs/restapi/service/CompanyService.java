@@ -3,6 +3,7 @@ package com.afs.restapi.service;
 import com.afs.restapi.entity.Company;
 import com.afs.restapi.entity.Employee;
 import com.afs.restapi.exception.CompanyNotFoundException;
+import com.afs.restapi.exception.DuplicateCompanyException;
 import com.afs.restapi.repository.CompanyRepository;
 import com.afs.restapi.repository.EmployeeRepository;
 import com.afs.restapi.service.mapper.CompanyMapper;
@@ -47,6 +48,9 @@ public class CompanyService {
     }
 
     public CompanyResponse create(CompanyRequest companyRequest) {
+        if(companyRepository.existsByName(companyRequest.getName())){
+            throw new IllegalArgumentException("Company name already exists.");
+        }
         Company company = CompanyMapper.toEntity(companyRequest);
         return CompanyMapper.toResponse(companyRepository.save(company));
     }

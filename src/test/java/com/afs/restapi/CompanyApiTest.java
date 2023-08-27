@@ -2,6 +2,7 @@ package com.afs.restapi;
 
 import com.afs.restapi.entity.Company;
 import com.afs.restapi.entity.Employee;
+import com.afs.restapi.exception.DuplicateCompanyException;
 import com.afs.restapi.repository.CompanyRepository;
 import com.afs.restapi.repository.EmployeeRepository;
 import com.afs.restapi.service.dto.CompanyRequest;
@@ -15,11 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.util.NestedServletException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
@@ -138,6 +141,25 @@ class CompanyApiTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].age").value(employee.getAge()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(employee.getGender()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].salary").value(employee.getSalary()));
+    }
+
+    @Test
+    void should_throw_duplicate_company_name_exception_when_create_company_given_existing_company_name(){
+        //given
+        companyRepository.save(getCompanyOOCL());
+        Company existingCompany = new Company(null, "OOCL");
+
+        //when
+        NestedServletException exception = assertThrows(NestedServletException.class, () -> {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String companyRequestJSON = objectMapper.writeValueAsString(existingCompany);
+            mockMvc.perform(post("/companies")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(companyRequestJSON));
+        });
+
+        //then
+        assertTrue(Objects.requireNonNull(exception.getMessage()).contains("Company name already exists."));
     }
 
     private static Employee getEmployee(Company company) {
