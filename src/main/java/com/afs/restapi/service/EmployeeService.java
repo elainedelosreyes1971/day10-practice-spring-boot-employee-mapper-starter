@@ -26,9 +26,9 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee findById(Long id) {
-        return employeeRepository.findById(id)
-                .orElseThrow(EmployeeNotFoundException::new);
+    public EmployeeResponse findById(Long id) {
+        return toResponse(employeeRepository.findById(id)
+                .orElseThrow(EmployeeNotFoundException::new));
     }
 
     public EmployeeResponse update(Long id, EmployeeRequest employeeRequest) {

@@ -33,6 +33,7 @@ class EmployeeApiTest {
     void setUp() {
         employeeRepository.deleteAll();
     }
+
     @Test
     void should_find_employees() throws Exception {
         Employee bob = employeeRepository.save(getEmployeeBob());
@@ -45,6 +46,7 @@ class EmployeeApiTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].gender").value(bob.getGender()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].salary").value(bob.getSalary()));
     }
+
     @Test
     void should_find_employee_by_gender() throws Exception {
         Employee bob = employeeRepository.save(getEmployeeBob());
@@ -79,7 +81,7 @@ class EmployeeApiTest {
 
     @Test
     void should_update_employee_age_and_salary() throws Exception {
-        Employee previousEmployee = employeeRepository.save(new Employee(null,"Json", 22, "Male", 1000));
+        Employee previousEmployee = employeeRepository.save(new Employee(null, "Json", 22, "Male", 1000));
         EmployeeRequest employeeRequest = new EmployeeRequest(previousEmployee.getId(), "lisi", 24, "Female", 2000, 1L);
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedEmployeeJson = objectMapper.writeValueAsString(employeeRequest);
@@ -108,7 +110,7 @@ class EmployeeApiTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(employee.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(employee.getAge()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value(employee.getGender()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.salary").value(employee.getSalary()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.salary").doesNotExist());
     }
 
     @Test
