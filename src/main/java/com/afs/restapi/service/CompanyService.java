@@ -3,18 +3,18 @@ package com.afs.restapi.service;
 import com.afs.restapi.entity.Company;
 import com.afs.restapi.entity.Employee;
 import com.afs.restapi.exception.CompanyNotFoundException;
-import com.afs.restapi.exception.DuplicateCompanyException;
 import com.afs.restapi.repository.CompanyRepository;
 import com.afs.restapi.repository.EmployeeRepository;
-import com.afs.restapi.service.mapper.CompanyMapper;
 import com.afs.restapi.service.dto.CompanyRequest;
 import com.afs.restapi.service.dto.CompanyResponse;
-import com.afs.restapi.service.mapper.EmployeeMapper;
+import com.afs.restapi.service.mapper.CompanyMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.afs.restapi.service.mapper.CompanyMapper.toResponse;
 
 @Service
 public class CompanyService {
@@ -44,7 +44,7 @@ public class CompanyService {
         Company toBeUpdatedCompany = companyRepository.findById(id)
                 .orElseThrow(CompanyNotFoundException::new);
         toBeUpdatedCompany.setName(company.getName());
-        companyRepository.save(toBeUpdatedCompany);
+        toResponse(companyRepository.save(toBeUpdatedCompany));
     }
 
     public CompanyResponse create(CompanyRequest companyRequest) {
@@ -52,7 +52,7 @@ public class CompanyService {
             throw new IllegalArgumentException("Company name already exists.");
         }
         Company company = CompanyMapper.toEntity(companyRequest);
-        return CompanyMapper.toResponse(companyRepository.save(company));
+        return toResponse(companyRepository.save(company));
     }
 
     public List<Employee> findEmployeesByCompanyId(Long id) {
