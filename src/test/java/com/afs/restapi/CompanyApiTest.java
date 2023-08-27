@@ -5,7 +5,6 @@ import com.afs.restapi.entity.Employee;
 import com.afs.restapi.repository.CompanyRepository;
 import com.afs.restapi.repository.EmployeeRepository;
 import com.afs.restapi.service.dto.CompanyRequest;
-import com.afs.restapi.service.dto.CompanyResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,9 +67,9 @@ class CompanyApiTest {
     void should_update_company_name() throws Exception {
         Company previousCompany = companyRepository.save(new Company(null, "Facebook"));
         Company companyUpdateRequest = new Company(previousCompany.getId(), "Meta");
-        employeeRepository.save(new Employee(null,"Json", 22, "Male", 1000, previousCompany.getId()));
-        employeeRepository.save(new Employee(null,"Json", 22, "Male", 1000, previousCompany.getId()));
-        employeeRepository.save(new Employee(null,"Json", 22, "Male", 1000, previousCompany.getId()));
+        employeeRepository.save(new Employee(null, "Json", 22, "Male", 1000, previousCompany.getId()));
+        employeeRepository.save(new Employee(null, "Json", 22, "Male", 1000, previousCompany.getId()));
+        employeeRepository.save(new Employee(null, "Json", 22, "Male", 1000, previousCompany.getId()));
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedEmployeeJson = objectMapper.writeValueAsString(companyUpdateRequest);
         mockMvc.perform(put("/companies/{id}", previousCompany.getId())
@@ -143,7 +142,7 @@ class CompanyApiTest {
     }
 
     @Test
-    void should_throw_duplicate_company_name_exception_when_create_company_given_existing_company_name(){
+    void should_throw_duplicate_company_name_exception_when_create_company_given_existing_company_name() {
         //given
         companyRepository.save(getCompanyOOCL());
         Company existingCompany = new Company(null, "OOCL");
